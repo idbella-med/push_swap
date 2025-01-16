@@ -7,7 +7,7 @@ typedef struct s_list
     struct s_list *next;
 }   t_list;
 
-#include "./libft/libft.h"
+#include "./libf/libft.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <ctype.h>
