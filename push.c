@@ -6,7 +6,7 @@ void pa(t_list **stack_a, t_list **stack_b)
     (*stack_b) = (*stack_b)->next;
     top->next = *stack_a;
     *stack_a = top;
-    write(1, "pa\n", 3);
+    ft_putstr_fd("pa\n", 1);
 }
 
 void pb(t_list **stack_a, t_list **stack_b)
@@ -15,5 +15,5 @@ void pb(t_list **stack_a, t_list **stack_b)
     (*stack_a) = (*stack_a)->next;
     top->next = *stack_b;
     *stack_b = top;
-    write(1, "pb\n", 3);
+    ft_putstr_fd("pb\n", 1);
 }

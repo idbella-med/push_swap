@@ -11,59 +11,25 @@ void ft_free(char **args)
     free(args);
 }
 
-
-int	ft_contains(int num, char **av, int i)
+int	is_sorted(t_list *stack)
 {
-	i++;
-	while (av[i])
+	while (stack->next != NULL)
 	{
-		if (ft_atoi(av[i]) == num)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	ft_is_it_num(char *num)
-{
-	int	i;
-
-	i = 0;
-	if (num[0] == '-')
-		i++;
-	while (num[i])
-	{
-		if (!ft_isdigit(num[i]))
+		if (stack->content > stack->next->content)
 			return (0);
-		i++;
+		stack = stack->next;
 	}
 	return (1);
 }
 
-int	check_args(int ac, char **av)
+static void	push_swap(t_list **stack_a, t_list **stack_b, int size)
 {
-	int		i;
-	long	tmp;
-	char	**args;	
-
-	i = 0;
-	if (ac == 2)
-		args = ft_split(av[1], ' ');
-	else
-	{
-		i = 1;
-		args = av;
-	}
-	while (args[i])
-	{
-		tmp = ft_atoi(args[i]);
-		if ((!ft_is_it_num(args[i])) || (ft_contains(tmp, args, i)))
-			return 0;
-		i++;
-	}
-	if (ac == 2)
-		ft_free(args);
-    return 1;
+	if (size == 2 && !is_sorted(*stack_a))
+		sa(stack_a);
+	// else if (size == 3)
+	// 	tiny_sort(stack_a);
+	// else if (size > 3 && !is_sorted(*stack_a))
+	// 	sort(stack_a, stack_b);
 }
 
 char **creat_stack(char **av)
@@ -106,18 +72,14 @@ int main(int ac, char **av)
 {
     t_list *stack_a;
     t_list *stack_b;
+	int size;
 
     if(!check_args(ac, av) || ac == 1)
         return(write(2, "Error\n", 6), 1);
 	char **list = creat_stack(av);
     stack_a = list_stack(list);
     stack_b = NULL;
-	pb(&stack_a, &stack_b);
-	while(stack_a)
-	{
-		printf("%d\n", stack_a->content);
-		stack_a = stack_a->next;
-	}
-	printf("b : %d\n", stack_b->content);
+	size = ft_lstsize(stack_a);
+	push_swap(&stack_a, &stack_b, size);
 	ft_free(list);
 }

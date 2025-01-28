@@ -5,7 +5,7 @@ RESET = \033[0m
 NAME = push_swap
 COMP = cc
 # FLAGS = -Wall -Wextra -Werror
-src = push_swap.c swap.c push.c
+src = push_swap.c swap.c push.c revers_rotate.c rotate.c check_args.c
 obj = $(src:.c=.o)
 
 all : $(NAME)
@@ -18,7 +18,7 @@ $(NAME) : $(obj)
 	@echo "$(GREEN)DONE :)$(RESET)"
 
 %.o: %.c push_swap.h
-	@$(COMP) -c -o $@ $<
+	@$(COMP) $(FLAGS) -c -o $@ $<
 
 clean:
 	@echo "$(RED)start command 'clean'....$(RESET)"
