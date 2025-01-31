@@ -22,14 +22,45 @@ int	is_sorted(t_list *stack)
 	return (1);
 }
 
+void	do_three(t_list **stack)
+{
+	if (is_sorted(*stack))
+		return ;
+	if ((*stack)->content > (*stack)->next->content && (*stack)->next->content <
+		(*stack)->next->next->content &&
+		(*stack)->content < (*stack)->next->next->content)
+		sa(stack);
+	else if ((*stack)->content < (*stack)->next->content && (*stack)->next->content >
+		(*stack)->next->next->content &&
+		(*stack)->content < (*stack)->next->next->content)
+	{
+			rra(stack);
+			sa(stack);
+	}
+	else if ((*stack)->content > (*stack)->next->content && (*stack)->content >
+		(*stack)->next->next->content &&
+		(*stack)->next->content < (*stack)->next->next->content)
+		ra(stack);
+	else if ((*stack)->content < (*stack)->next->content && (*stack)->content >
+		(*stack)->next->next->content &&
+		(*stack)->next->content > (*stack)->next->next->content)
+		rra(stack);
+	else if ((*stack)->content > (*stack)->next->content && (*stack)->next->content >
+		(*stack)->next->next->content)
+	{
+			ra(stack);
+			sa(stack);
+	}
+}
+
 static void	push_swap(t_list **stack_a, t_list **stack_b, int size)
 {
-	if (size == 2 && !is_sorted(*stack_a))
+	if(size == 2)
 		sa(stack_a);
-	// else if (size == 3)
-	// 	tiny_sort(stack_a);
-	// else if (size > 3 && !is_sorted(*stack_a))
-	// 	sort(stack_a, stack_b);
+	else if (size == 3)
+		do_three(stack_a);
+	else if (size > 3 && !is_sorted(*stack_a))
+		sort(stack_a, stack_b);
 }
 
 char **creat_stack(char **av)
@@ -54,18 +85,27 @@ char **creat_stack(char **av)
 
 t_list *list_stack(char **list)
 {
-	t_list *stack_a = NULL;
-	t_list *new;
-	int i = 0;
-	while(list[i])
-	{
-		new = ft_lstnew(atoi(list[i]));
-		if(!new)
-			return(ft_lstclear(&stack_a), NULL);
-		ft_lstadd_back(&stack_a, new);
+    t_list *stack_a;
+    t_list *new;
+    int i = 0;
+
+    stack_a = malloc(sizeof(t_list *));
+    if (!stack_a)
+        return (NULL);
+    stack_a = NULL;
+	i = 0;
+    while (list[i])
+    {
+        new = ft_lstnew(ft_atoi(list[i]));
+        if (!new)
+        {
+            ft_lstclear(&stack_a);
+            return (NULL);
+        }
+        ft_lstadd_back(&stack_a, new);
         i++;
-	}
-	return (stack_a);
+    }
+    return (stack_a);
 }
 
 int main(int ac, char **av)
@@ -80,6 +120,7 @@ int main(int ac, char **av)
     stack_a = list_stack(list);
     stack_b = NULL;
 	size = ft_lstsize(stack_a);
+	assign_index(stack_a, size);
 	push_swap(&stack_a, &stack_b, size);
 	ft_free(list);
 }

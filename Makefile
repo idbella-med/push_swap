@@ -5,7 +5,7 @@ RESET = \033[0m
 NAME = push_swap
 COMP = cc
 # FLAGS = -Wall -Wextra -Werror
-src = push_swap.c swap.c push.c revers_rotate.c rotate.c check_args.c
+src = push_swap.c swap.c push.c revers_rotate.c rotate.c args.c sort.c index.c cost.c do_move.c position.c 
 obj = $(src:.c=.o)
 
 all : $(NAME)

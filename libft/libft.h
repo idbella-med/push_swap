@@ -19,6 +19,11 @@
 typedef struct s_list
 {
 	int	content;
+	int index;
+	int position;
+	int target_position;
+	int cost_stack_a;
+	int cost_stack_b;
 	struct s_list	*next;
 }	t_list;
 
