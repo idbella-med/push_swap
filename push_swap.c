@@ -22,53 +22,41 @@ int	is_sorted(t_list *stack)
 	return (1);
 }
 
-void	do_three(t_list **stack)
+void	do_three(t_list **a)
 {
-	if (is_sorted(*stack))
-		return ;
-	if ((*stack)->content > (*stack)->next->content && (*stack)->next->content <
-		(*stack)->next->next->content &&
-		(*stack)->content < (*stack)->next->next->content)
-		sa(stack);
-	else if ((*stack)->content < (*stack)->next->content && (*stack)->next->content >
-		(*stack)->next->next->content &&
-		(*stack)->content < (*stack)->next->next->content)
+	t_list	*max;
+
+	max = find_max(*a);
+	if (*a == max)
+		ra(a);
+	else if ((*a)->next == max)
 	{
-			rra(stack);
-			sa(stack);
+		rra(a);
 	}
-	else if ((*stack)->content > (*stack)->next->content && (*stack)->content >
-		(*stack)->next->next->content &&
-		(*stack)->next->content < (*stack)->next->next->content)
-		ra(stack);
-	else if ((*stack)->content < (*stack)->next->content && (*stack)->content >
-		(*stack)->next->next->content &&
-		(*stack)->next->content > (*stack)->next->next->content)
-		rra(stack);
-	else if ((*stack)->content > (*stack)->next->content && (*stack)->next->content >
-		(*stack)->next->next->content)
-	{
-			ra(stack);
-			sa(stack);
-	}
+	if ((*a)->content > (*a)->next->content)
+		sa(a);
 }
 
-static void	push_swap(t_list **stack_a, t_list **stack_b, int size)
+static void	push_swap(t_list **stack_a, t_list **stack_b)
 {
-	if(size == 2)
+	if(is_sorted(*stack_a))
+		return ;
+	else if (ft_lstsize(*stack_a) == 2)
 		sa(stack_a);
-	else if (size == 3)
-		do_three(stack_a);
-	else if (size > 3 && !is_sorted(*stack_a))
-		sort(stack_a, stack_b);
+	else if (ft_lstsize(*stack_a) < 300)
+		sort_low(stack_a, stack_b);
+	else
+		sort_high(stack_a, stack_b);
 }
 
 char **creat_stack(char **av)
 {
 	int i = 2;
+	int j = 0;
 	char *all;
 	char *tmp;
 	char **list;
+
 	all = ft_strdup(av[1]);
 	while(av[i])
 	{
@@ -114,13 +102,13 @@ int main(int ac, char **av)
     t_list *stack_b;
 	int size;
 
-    if(!check_args(ac, av) || ac == 1)
-        return(write(2, "Error\n", 6), 1);
+    if(!check_args(ac, av) || ac == 1 || av[1][0] == '\0')
+        force_exit();
 	char **list = creat_stack(av);
     stack_a = list_stack(list);
     stack_b = NULL;
 	size = ft_lstsize(stack_a);
-	assign_index(stack_a, size);
-	push_swap(&stack_a, &stack_b, size);
+	push_swap(&stack_a, &stack_b);
 	ft_free(list);
+	return 0;
 }

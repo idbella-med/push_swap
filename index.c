@@ -1,30 +1,80 @@
 #include "push_swap.h"
 
-void	assign_index(t_list *stack_a, int stack_size)
+t_list	*find_max(t_list *stack)
 {
-	t_list	*ptr;
-	t_list	*highest;
-	int		value;
+	t_list	*max;
+	int		n;
 
-	while (--stack_size > 0)
+	n = stack->content;
+	max = stack;
+	while (stack)
 	{
-		ptr = stack_a;
-		value = INT_MIN;
-		highest = NULL;
-		while (ptr)
+		if (stack->content > n)
 		{
-			if (ptr->content == INT_MIN && ptr->index == 0)
-				ptr->index = 1;
-			if (ptr->content > value && ptr->index == 0)
-			{
-				value = ptr->content;
-				highest = ptr;
-				ptr = stack_a;
-			}
-			else
-				ptr = ptr->next;
+			n = stack->content;
+			max = stack;
 		}
-		if (highest != NULL)
-			highest->index = stack_size;
+		stack = stack->next;
+	}
+	return (max);
+}
+
+t_list	*find_min(t_list *stack)
+{
+	t_list	*min;
+	int		n;
+
+	n = stack->content;
+	min = stack;
+	while (stack)
+	{
+		if (stack->content < n)
+		{
+			n = stack->content;
+			min = stack;
+		}
+		stack = stack->next;
+	}
+	return (min);
+}
+
+void	cost_calc(t_list *a, t_list *b)
+{
+	int	a_len;
+	int	b_len;
+
+	a_len = ft_lstsize(a);
+	b_len = ft_lstsize(b);
+	while (a)
+	{
+		a->cost_stack = a->index;
+		if (!(a->above))
+			a->cost_stack = a_len - (a->index);
+		if (a->target->above)
+			a->cost_stack += a->target->index;
+		else
+			a->cost_stack += b_len - (a->target->index);
+		a = a->next;
+	}
+}
+
+void	set_index(t_list *stack)
+{
+	int	i;
+	int	mid;
+
+	if (!stack)
+		return ;
+	i = 0;
+	mid = ft_lstsize(stack) / 2;
+	while (stack)
+	{
+		stack->index = i;
+		if (i <= mid)
+			stack->above = 1;
+		else
+			stack->above = 0;
+		stack = stack->next;
+		i++;
 	}
 }

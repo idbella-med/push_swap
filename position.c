@@ -1,137 +1,73 @@
 #include "push_swap.h"
 
-/* get_position:
-*	Assigns a position to each element of a stack from top to bottom
-*	in ascending order.
-*	Example stack:
-*		value:		 3	 0	 9	 1
-*		index:		[3]	[1]	[4]	[2]
-*		position:	<0>	<1>	<2>	<3>
-*	This is used to calculate the cost of moving a certain number to
-*	a certain position. If the above example is stack b, it would cost
-*	nothing (0) to push the first element to stack a. However if we want to
-*	push the highest value, 9, which is in third position, it would cost 2 extra
-*	moves to bring that 9 to the top of b before pushing it to stack a.
-*/
-static void	get_position(t_list **stack)
+t_list	*get_cheap(t_list *stack)
 {
-	t_list	*tmp;
-	int		i;
+	t_list		*cheap;
+	long long	n;
 
-	tmp = *stack;
-	i = 0;
-	while (tmp)
+	n = LLONG_MAX;
+	while (stack)
 	{
-		tmp->position = i;
-		tmp = tmp->next;
-		i++;
+		if ((long long)stack->cost_stack < n)
+		{
+			cheap = stack;
+			n = (long long)stack->cost_stack;
+		}
+		stack = stack->next;
+	}
+	return (cheap);
+}
+
+void	set_target_a(t_list *a, t_list *b)
+{
+	t_list		*target;
+	t_list		*current_b;
+	long long	match;
+
+	while (a)
+	{
+		match = LLONG_MIN;
+		current_b = b;
+		while (current_b)
+		{
+			if (current_b->content < a->content && current_b->content > match)
+			{
+				match = current_b->content;
+				target = current_b;
+			}
+			current_b = current_b->next;
+		}
+		if (match == LLONG_MIN)
+			a->target = find_max(b);
+		else
+			a->target = target;
+		a = a->next;
 	}
 }
 
-/* get_lowest_index_position:
-*	Gets the current position of the element with the lowest index
-*	within a stack.
-*/
-int	get_lowest_index_position(t_list **stack)
+void	set_target_b(t_list *a, t_list *b)
 {
-	t_list	*tmp;
-	int		lowest_index;
-	int		lowest_pos;
+	t_list		*target;
+	t_list		*current_a;
+	long long	match;
 
-	tmp = *stack;
-	lowest_index = INT_MAX;
-	get_position(stack);
-	lowest_pos = tmp->position;
-	while (tmp)
+	while (b)
 	{
-		if (tmp->index < lowest_index)
+		match = LLONG_MAX;
+		current_a = a;
+		while (current_a)
 		{
-			lowest_index = tmp->index;
-			lowest_pos = tmp->position;
+			if (current_a->content > b->content && current_a->content < match)
+			{
+				match = current_a->content;
+				target = current_a;
+			}
+			current_a = current_a->next;
 		}
-		tmp = tmp->next;
-	}
-	return (lowest_pos);
-}
-
-/* get_target:
-*	Picks the best target position in stack A for the given index of
-*	an element in stack B. First checks if the index of the B element can
-*	be placed somewhere in between elements in stack A, by checking whether
-*	there is an element in stack A with a bigger index. If not, it finds the
-*	element with the smallest index in A and assigns that as the target position.
-*	--- Example:
-*		target_pos starts at INT_MAX
-*		B index: 3
-*		A contains indexes: 9 4 2 1 0
-*		9 > 3 && 9 < INT_MAX 	: target_pos updated to 9
-*		4 > 3 && 4 < 9 			: target pos updated to 4
-*		2 < 3 && 2 < 4			: no update!
-*	So target_pos needs to be the position of index 4, since it is
-*	the closest index.
-*	--- Example:
-*		target_pos starts at INT_MAX
-*		B index: 20
-*		A contains indexes: 16 4 3
-*		16 < 20					: no update! target_pos = INT_MAX
-*		4  < 20					: no update! target_pos = INT_MAX
-*		3  < 20					: no update! target_pos = INT_MAX
-*	... target_pos stays at INT MAX, need to switch strategies.
-*		16 < 20					: target_pos updated to 20
-*		4  < 20					: target_pos updated to 4
-*		3  < 20					: target_pos updated to 3
-*	So target_pos needs to be the position of index 3, since that is
-*	the "end" of the stack.
-*/
-static int	get_target(t_list **a, int b_idx, int target_idx, int target_pos)
-{
-	t_list	*tmp_a;
-
-	tmp_a = *a;
-	while (tmp_a)
-	{
-		if (tmp_a->index > b_idx && tmp_a->index < target_idx)
-		{
-			target_idx = tmp_a->index;
-			target_pos = tmp_a->position;
-		}
-		tmp_a = tmp_a->next;
-	}
-	if (target_idx != INT_MAX)
-		return (target_pos);
-	tmp_a = *a;
-	while (tmp_a)
-	{
-		if (tmp_a->index < target_idx)
-		{
-			target_idx = tmp_a->index;
-			target_pos = tmp_a->position;
-		}
-		tmp_a = tmp_a->next;
-	}
-	return (target_pos);
-}
-
-/* get_target_position:
-*	Assigns a target position in stack A to each element of stack A.
-*	The target position is the spot the element in B needs to
-*	get to in order to be sorted correctly. This position will
-*	be used to calculate the cost of moving each element to
-*	its target position in stack A.
-*/
-void	get_target_position(t_list **a, t_list **b)
-{
-	t_list	*tmp_b;
-	int		position;
-
-	tmp_b = *b;
-	get_position(a);
-	get_position(b);
-	position = 0;
-	while (tmp_b)
-	{
-		position = get_target(a, tmp_b->index, INT_MAX, position);
-		tmp_b->target_position = position;
-		tmp_b = tmp_b->next;
+		if (match == LLONG_MAX)
+			b->target = find_min(a);
+		else
+			b->target = target;
+		b = b->next;
 	}
 }

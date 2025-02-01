@@ -20,10 +20,9 @@ typedef struct s_list
 {
 	int	content;
 	int index;
-	int position;
-	int target_position;
-	int cost_stack_a;
-	int cost_stack_b;
+	int above;
+	int cost_stack;
+	struct s_list *target;
 	struct s_list	*next;
 }	t_list;
 

@@ -17,14 +17,10 @@ t_list	*ft_lstnew(int content)
 	t_list	*node1;
 
 	node1 = malloc(sizeof(t_list));
-	if (node1 == NULL)
+	if (!node1)
 		return (NULL);
 	node1->content = content;
 	node1->index = 0;
-	node1->cost_stack_a = -1;
-	node1->cost_stack_b = -1;
-	node1->position = -1;
-	node1->target_position = -1;
 	node1->next = NULL;
 	return (node1);
 }

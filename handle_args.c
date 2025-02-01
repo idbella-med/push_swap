@@ -1,5 +1,25 @@
 #include "push_swap.h"
 
+void	force_exit(void)
+{
+	ft_putstr_fd("Error\n", 2);
+	exit(1);
+}
+
+void	from_b_to_a(t_list **a, t_list **b)
+{
+	while (*b)
+	{
+		set_index(*a);
+		set_index(*b);
+		set_target_b(*a, *b);
+		cost_calc(*b, *a);
+		push_to_a(a, b);
+	}
+	set_index(*a);
+	bring_min_top(a);
+}
+
 static int	ft_contains(int num, char **av, int i)
 {
 	i++;
@@ -21,7 +41,9 @@ static int	ft_is_it_num(char *num)
 		i++;
 	while (num[i])
 	{
-		if (!ft_isdigit(num[i]))
+		if(num[i] == ' ')
+			i++;
+		else if (!ft_isdigit(num[i]))
 			return (0);
 		i++;
 	}
