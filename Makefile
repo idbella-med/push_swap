@@ -1,36 +1,41 @@
-GREEN = \033[32m
-RED = \033[31m
-RESET = \033[0m
-
 NAME = push_swap
+bonus = checker
 COMP = cc
-# FLAGS = -Wall -Wextra -Werror
-src = push_swap.c swap.c push.c revers_rotate.c rotate.c handle_args.c sort.c index.c position.c sort_tools.c
-obj = $(src:.c=.o)
+FLAGS = -Wall -Wextra -Werror
+SRC = ./mandatory/main.c ./mandatory/handle_args.c ./mandatory/push.c ./mandatory/rotate.c ./mandatory/rev_rotate.c ./mandatory/swap.c ./mandatory/stacks_tools.c \
+	./mandatory/utils.c ./mandatory/sort.c ./mandatory/sort_tools.c 
+
+SRCBONUS = ./bonus/checker_bonus.c ./bonus/get_next_line_bonus.c ./bonus/handle_args_bonus.c ./bonus/push_bonus.c ./bonus/rev_rotate_bonus.c ./bonus/stacks_tools_bonus.c \
+	./bonus/swap_bonus.c ./bonus/utils_bonus.c ./bonus/creat_list_bonus.c ./bonus/rotate_bonus.c
+
+OBJ = $(SRC:.c=.o)
+
+OBJBONUS = $(SRCBONUS:.c=.o)
 
 all : $(NAME)
 
-$(NAME) : $(obj)
-	@echo "$(RED)start compailing....$(RESET)"
+$(NAME) : $(OBJ)
 	@make re -C libft
-	@make bonus -C libft
-	@$(COMP) $(obj) ./libft/libft.a -o $(NAME)
-	@echo "$(GREEN)DONE :)$(RESET)"
+	$(COMP) $(OBJ) $(FLAGS) ./libft/libft.a -o $(NAME)
 
-%.o: %.c push_swap.h
+bonus : $(bonus)
+
+$(bonus) : $(OBJBONUS)
+	@make re -C libft
+	$(COMP) $(OBJBONUS) $(FLAGS) ./libft/libft.a -o $(bonus)
+
+%.o: %.c push_swap.h ./bonus/checker_bonus.h
 	@$(COMP) $(FLAGS) -c -o $@ $<
 
 clean:
-	@echo "$(RED)start command 'clean'....$(RESET)"
 	@make clean -C libft
-	@rm -rf $(obj)
-	@echo "$(GREEN)DONE :)$(RESET)"
+	@rm -rf $(OBJ)
+	@rm -rf $(OBJBONUS)
 
 fclean: clean
-	@echo "$(RED)start command 'fclean'....$(RESET)"
 	@make fclean -C libft
 	@rm -rf $(NAME)
-	@echo "$(GREEN)DONE :)$(RESET)"
+	@rm -rf $(bonus)
 
 re: fclean all
 

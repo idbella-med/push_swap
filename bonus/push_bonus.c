@@ -1,31 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   push_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mohidbel <mohidbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/03 16:03:42 by mohidbel          #+#    #+#             */
-/*   Updated: 2025/01/21 18:56:05 by mohidbel         ###   ########.fr       */
+/*   Created: 2025/02/09 18:17:59 by mohidbel          #+#    #+#             */
+/*   Updated: 2025/02/26 10:02:36 by mohidbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "checker_bonus.h"
 
-void	ft_lstclear(t_list **lst)
+static void	push(t_list **stack1, t_list **stack2)
 {
-	t_list	*temp;
-	t_list	*next;
+	t_list	*top;
 
-	if (!lst || !*lst)
+	top = (*stack1)->next;
+	(*stack1)->next = *stack2;
+	*stack2 = *stack1;
+	*stack1 = top;
+}
+
+void	pa(t_list **stack_a, t_list **stack_b)
+{
+	if (!*stack_b || !stack_b)
 		return ;
-	temp = *lst;
-	while (temp)
-	{
-		next = temp->next;
-		free(temp);
-		temp = next;
-	}
-	free(lst);
-	*lst = NULL;
+	push(stack_b, stack_a);
+}
+
+void	pb(t_list **stack_a, t_list **stack_b)
+{
+	if (!*stack_a || !stack_a)
+		return ;
+	push(stack_a, stack_b);
 }

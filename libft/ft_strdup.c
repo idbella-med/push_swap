@@ -6,7 +6,7 @@
 /*   By: mohidbel <mohidbel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 09:53:59 by mohidbel          #+#    #+#             */
-/*   Updated: 2024/11/14 15:41:09 by mohidbel         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:01:21 by mohidbel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s1)
 	int		i;
 	int		s1len;
 
+	if (!s1)
+		return (NULL);
 	s1len = 0;
 	while (s1[s1len] != '\0')
 		s1len++;
